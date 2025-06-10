@@ -1,11 +1,11 @@
-import tkinter as tk
-from gui.dashboard import Dashboard
+import tkinter as tk # O tkinter é usado para  criar a interface gráfica (usado na pasta GUI)
+from gui.dashboard import Dashboard #Importa a class responsável por mostrar os dados dos sensores na interface
 from sensors.temperature import TemperatureSensor
 from sensors.humidity import HumiditySensor
 from sensors.air_quality import AirQualitySensor
 from sensors.light import LightSensor
-from sensors.noise import NoiseSensor
-from mqtt.client import MqttClient
+from sensors.noise import NoiseSensor # classes dos sensores
+from mqtt.client import MqttClient #Importa a classe responsável por enviar dados via protocolo MQTT
 
 class App:
     def __init__(self, root):
