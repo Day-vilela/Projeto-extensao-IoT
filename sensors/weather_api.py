@@ -1,42 +1,40 @@
 import requests
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv() # Carrega variáveis do .env
 
 class WeatherSensor:
-    def __init__(self, lat=-22.7556, lon=-43.4603):  # Nova Iguaçu - RJ
-        self.api_url = (
-            f"https://api.open-meteo.com/v1/forecast?"
-            f"latitude={lat}&longitude={lon}"
-            f"&current_weather=true&hourly=relative_humidity_2m,pm10"
-        )
+    def __init__(self):
+        self.api_key = os.getenv("OPENWEATHER_API_KEY") 
+        self.cidade = "Nova Iguaçu,BR"
+        self.base_url = "https://api.openweathermap.org/data/2.5/weather"
 
     def read(self):
         try:
-            response = requests.get(self.api_url, timeout=5)
-            response.raise_for_status()
-            json_data = response.json()
-
-            # Dados atuais
-            current = json_data.get("current_weather", {})
-            hourly = json_data.get("hourly", {})
-            time_now = current.get("time")  # Ex: '2025-06-11T15:00'
-
-            # Achar o índice do horário atual na lista 'hourly'
-            if time_now and "time" in hourly:
-                try:
-                    index = hourly["time"].index(time_now)
-                    hum = hourly.get("relative_humidity_2m", [])[index]
-                    aqi = hourly.get("pm10", [])[index]
-                except ValueError:
-                    hum = "---"
-                    aqi = "---"
-            else:
-                hum = "---"
-                aqi = "---"
-
-            return {
-                "temp": current.get("temperature", "---"),
-                "hum": hum,
-                "aqi": aqi  # PM10 como proxy de AQI
+            params = {
+                'q': self.cidade,
+                'appid': self.api_key,
+                'units': 'metric',
+                'lang': 'pt_br'
             }
+            resposta = requests.get(self.base_url, params=params)
+            if resposta.status_code == 200:
+                dados = resposta.json()
+                return {
+                    'temp': round(dados['main']['temp'], 1),
+                    'hum': round(dados['main']['humidity'], 1),
+                    'aqi': self.simular_aqi()  # AQI não vem pela API gratuita, vamos simular
+                }
+            else:
+                print(f"Erro na API: {resposta.status_code}")
+                return {'temp': '---', 'hum': '---', 'aqi': '---'}
         except Exception as e:
-            print(f"[Erro na API Open-Meteo] {e}")
-            return {"temp": "---", "hum": "---", "aqi": "---"}
+            print("Erro ao acessar a API:", e)
+            return {'temp': '---', 'hum': '---', 'aqi': '---'}
+
+    def simular_aqi(self):
+        # Simula valor entre 0 e 300
+        import random
+        return random.randint(30, 120)
