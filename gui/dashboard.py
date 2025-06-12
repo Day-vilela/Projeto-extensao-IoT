@@ -8,6 +8,11 @@ class Dashboard:
         self.root = root
         self.root.title("🐱‍👤 Ambiente Inteligente")
         self.root.geometry("350x480")
+        # Label de erro (inicialmente escondida)
+        self.label_erro = ctk.CTkLabel(self.root, text="⚠️ Dados da API indisponíveis", text_color="red", font=("Arial", 12, "bold"))
+        self.label_erro.pack(pady=(5, 0))
+        self.label_erro.pack_forget()
+
 
         # Aqui temos o Mapeamento dos sensores
         self.sensor_map = {
@@ -42,6 +47,12 @@ class Dashboard:
         for nome, (chave, unidade) in self.sensor_map.items():
             valor = data.get(chave, '---')
             self.valor_labels[nome].configure(text=f"{valor} {unidade}")
+
+    def mostrar_erro_api(self, mostrar=True):
+        if mostrar:
+            self.label_erro.pack()
+        else:
+            self.label_erro.pack_forget()
 
 # Configurações tema
 ctk.set_appearance_mode("dark")  # "light"
@@ -88,10 +99,13 @@ def atualizar_dados_reais():
     dashboard.update(dados)
     app.after(5000, atualizar_dados_reais)  # Atualiza a cada 5 segundos
 
+    
+
 
 
 # Iniciar simulação
 atualizar_dados_reais()
+
 # Rodar interface
 app.mainloop()
 
