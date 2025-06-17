@@ -18,8 +18,8 @@ O projeto busca:
 
 ## 🧰 Funcionalidades
 
-- 📡 Leitura de dados reais via [Open-Meteo API](https://open-meteo.com/) (temperatura, umidade, AQI/PM10).
-- 💡 Simulação de sensores de ruído e luz.
+- 📡 Leitura de dados reais via [OpenWeather API](https://openweathermap.org/api) (temperatura e umidade).
+- 💡 Simulação de sensores de AQi, ruído e luz.
 - 📊 Dashboard interativo com `customtkinter`.
 - ☁️ Envio de dados para um broker MQTT público (HiveMQ).
 
@@ -30,7 +30,7 @@ O projeto busca:
 - Python 3
 - Tkinter + CustomTkinter (interface gráfica)
 - MQTT com Paho MQTT
-- Open-Meteo API (clima em tempo real)
+- OpenWeather API (clima em tempo real)
 - Requests (requisições HTTP)
 - Simulação de sensores com Python
 
@@ -83,7 +83,7 @@ python main.py
 
 ## 📌 Observações
 
-- Os dados de temperatura, umidade e qualidade do ar são obtidos **em tempo real da cidade de Nova Iguaçu - RJ**.
+- Os dados de temperatura, umidade são obtidos **em tempo real da cidade de Nova Iguaçu - RJ**.
 - Os sensores de luz e ruído ainda são simulados com valores aleatórios, podendo futuramente ser integrados a sensores físicos via GPIO.
 - Os dados são enviados a cada 2 segundos para um tópico MQTT no broker HiveMQ.
 
